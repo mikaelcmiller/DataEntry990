@@ -9,6 +9,9 @@ LARGE_FONT = ("Verdana", 12)
 class DE990App(tk.Tk):
 	def __init__(self, *args, **kwargs):
 		tk.Tk.__init__(self, *args, **kwargs)
+		
+		tk.Tk.wm_title(self,"990 Data Entry Tool")
+		
 		container = tk.Frame(self)
 		container.pack(side="top", fill="both", expand=True)
 		container.grid_rowconfigure(0, weight=1)
@@ -45,6 +48,10 @@ class StartPage(tk.Frame):
 		button2.pack()
 
 class PageOne(tk.Frame):
+	thistext='1. Mikael'
+	def ttext(self, param):
+		print(param)
+	
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
 		label = tk.Label(self, text="Page One", font=LARGE_FONT)
@@ -55,8 +62,18 @@ class PageOne(tk.Frame):
 		button2 = ttk.Button(self, text="Visit Page 2", 
 			command=lambda: controller.show_frame(PageTwo))
 		button2.pack()
+		buttonprint = ttk.Button(self, text="Print 'Mikael'", command=lambda: self.ttext(self.thistext))
+		buttonprint.pack()
+
+#def ptext(param):
+#	print(param)
+#thistext="Mikael"
 
 class PageTwo(tk.Frame):
+	thistext='2. Miller'
+	def ttext2(self, param):
+		print(param)
+	
 	def __init__(self, parent, controller):
 		tk.Frame.__init__(self, parent)
 		label = tk.Label(self, text="Page Two!", font=LARGE_FONT)
@@ -67,6 +84,9 @@ class PageTwo(tk.Frame):
 		button1 = ttk.Button(self, text="Visit Page 1", 
 			command=lambda: controller.show_frame(PageOne))
 		button1.pack()
+		buttonprint2 = ttk.Button(self, text="Print 'Miller'", command=lambda: self.ttext2(self.thistext))
+		buttonprint2.pack()
+
 
 app = DE990App()
 app.mainloop()
