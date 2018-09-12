@@ -2,9 +2,27 @@
 
 import tkinter as tk
 from tkinter import ttk
+import pandas as pd
+import pandas.io.sql as psql
+import pyodbc
+import os
 
 LARGE_FONT = ("Verdana", 12)
 
+
+class NextForm:
+	def getnext(self):
+		self.pyocnxn = pyodbc.connect("DRIVER={SQL Server};SERVER=SNADSSQ3;DATABASE=assessorwork;trusted_connection=yes;")
+		self.nextform_sql = """ SELECT TOP 1 * from [ManualDataEntry].[990].[Next990ForEntry] """
+		self.formdf = pd.DataFrame(psql.read_sql(self.nextform_sql, self.pyocnxn))
+		p1id = self.formdf.loc[0,'Page1_Id']
+		#print(p1id)
+		cursor = self.pyocnxn.cursor()
+		self.updatefiling_sql = """ UPDATE [ManualDataEntry].[990].[Filing] set ExtractionCodeId=1 where Page1_Id = ? """
+		cursor.execute(self.updatefiling_sql,p1id)
+		self.pyocnxn.commit()
+		self.pyocnxn.close()
+		print(self.formdf)
 
 class DE990App(tk.Tk):
 	def __init__(self, *args, **kwargs):
@@ -16,7 +34,7 @@ class DE990App(tk.Tk):
 		container.pack(side="top", fill="both", expand=True)
 		container.grid_rowconfigure(0, weight=1)
 		container.grid_columnconfigure(0, weight=1)
-	
+		
 		self.frames = {}
 		
 		#Page List - use classes to create distinct pages
@@ -30,6 +48,10 @@ class DE990App(tk.Tk):
 	def show_frame(self, cont):
 		frame = self.frames[cont]
 		frame.tkraise()
+	
+	#NF = NextForm()
+	#NF.getnext()
+	
 
 def qf(param):
 	print(param)
@@ -70,6 +92,9 @@ class PageOne(tk.Frame):
 		buttonPF = ttk.Button(self, text="PF Entry", 
 			command=lambda: controller.show_frame(PFEntry))
 		buttonPF.pack()
+		NF = NextForm()
+		nfbtn = ttk.Button(self, text="Next Form", command=NF.getnext)
+		nfbtn.pack()
 
 #def ptext(param):
 #	print(param)
@@ -95,6 +120,9 @@ class PageTwo(tk.Frame):
 		buttonPF = ttk.Button(self, text="PF Entry", 
 			command=lambda: controller.show_frame(PFEntry))
 		buttonPF.pack()
+		NF = NextForm()
+		nfbtn = ttk.Button(self, text="Next Form", command=NF.getnext)
+		nfbtn.pack()
 
 class PFEntry(tk.Frame):
 	def __init__(self, parent, controller):
@@ -110,7 +138,12 @@ class PFEntry(tk.Frame):
 		button2 = ttk.Button(self, text="Visit Page 2", 
 			command=lambda: controller.show_frame(PageTwo))
 		button2.pack()
+		NF = NextForm()
+		nfbtn = ttk.Button(self, text="Next Form", command=NF.getnext)
+		nfbtn.pack()
+	
 
 
 app = DE990App()
+print("Opening 990 App")
 app.mainloop()
