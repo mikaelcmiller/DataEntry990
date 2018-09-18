@@ -66,7 +66,7 @@ class Dataverse:
 		pyocnxn.close()
 		self.EIN = formdf.loc[0,'Ein']
 		self.Company = formdf.loc[0,'Name']
-		self.FormYear = str(formdf.loc[0,'FileDate'])[4]
+		self.FormYear = str(formdf.loc[0,'FileDate'])[0:4]
 		self.FileLocation = formdf.loc[0,'FileLocation']
 		self.Page1_Id = formdf.loc[0,'Page1_Id']
 		self.FileType = formdf.loc[0,'FileType']
