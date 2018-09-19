@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import ttk
+from tkinter import *
 import pandas as pd
 import pandas.io.sql as psql
 import pyodbc
@@ -70,6 +71,7 @@ class Dataverse:
 		self.FileLocation = formdf.loc[0,'FileLocation']
 		self.Page1_Id = formdf.loc[0,'Page1_Id']
 		self.FileType = formdf.loc[0,'FileType']
+		print("Getnext done")
 
 
 class DE990App(tk.Tk):
@@ -103,28 +105,28 @@ class DE990App(tk.Tk):
 		frame = self.frames[cont]
 		frame.tkraise()
 	
-	def getnext(*self):
-		global Page1_Id
-		global FileType
-		print("GetNext active")
-		pyocnxn = pyodbc.connect("DRIVER={SQL Server};SERVER=SNADSSQ3;DATABASE=assessorwork;trusted_connection=yes;")
-		nextform_sql = """ SELECT TOP 1 * from [ManualDataEntry].[990].[Next990ForEntry] where Page1_Id in ('0e0c6692','0e0c66d4','0e0c66f6','0e0c671e','0e0c672b','0e0c674b','0e0c678a','0e0c6797','0e0c67a7','0e0c67bc','0e0c67de','0e0c67fa','0e0c6813','0e0c6829','0e0c6856','0e0c6872','0e0c6889','0e0c68a9','0e0c68c4','0e0c68e6','0e0c6919','0e0c6929','0e0c6943','0e0c6957','0e0c697f','0e0c699f','0e0c69b8','0e0c6a2b','0e0c6a49','0e0c6a6a','0e0c6a84','0e0c6aad','0e0c6ad9','0e0c6b00','0e0c6b20','0e0c6b34','0e0c6b45','0e0c6b5f','0e0c6b7c','0e0c6b9b','0e0c6bc0','0e0c6bd3','0e0c6be6','0e0c6c06','0e0c6c21','0e0c6c3e','0e0c6c5f','0e0c6c9b','0e0c6cc1','0e0c6cec','0e0c6d01','0e0c6d12','0e0c6d2e','0e0c6d50','0e0c6d6d') """
-		formdf = pd.DataFrame(psql.read_sql(nextform_sql, pyocnxn))
-		p1id = formdf.loc[0,'Page1_Id']
-		cursor = pyocnxn.cursor()
-		updatefiling_sql = """ UPDATE [ManualDataEntry].[990].[Filing] set ExtractionCodeId=1 where Page1_Id = ? """
-		cursor.execute(updatefiling_sql,p1id)
-		pyocnxn.commit()
-		pyocnxn.close()
+	#def getnext(*self):
+	#	global Page1_Id
+	#	global FileType
+	#	print("GetNext active")
+	#	pyocnxn = pyodbc.connect("DRIVER={SQL Server};SERVER=SNADSSQ3;DATABASE=assessorwork;trusted_connection=yes;")
+	#	nextform_sql = """ SELECT TOP 1 * from [ManualDataEntry].[990].[Next990ForEntry] where Page1_Id in ('0e0c6692','0e0c66d4','0e0c66f6','0e0c671e','0e0c672b','0e0c674b','0e0c678a','0e0c6797','0e0c67a7','0e0c67bc','0e0c67de','0e0c67fa','0e0c6813','0e0c6829','0e0c6856','0e0c6872','0e0c6889','0e0c68a9','0e0c68c4','0e0c68e6','0e0c6919','0e0c6929','0e0c6943','0e0c6957','0e0c697f','0e0c699f','0e0c69b8','0e0c6a2b','0e0c6a49','0e0c6a6a','0e0c6a84','0e0c6aad','0e0c6ad9','0e0c6b00','0e0c6b20','0e0c6b34','0e0c6b45','0e0c6b5f','0e0c6b7c','0e0c6b9b','0e0c6bc0','0e0c6bd3','0e0c6be6','0e0c6c06','0e0c6c21','0e0c6c3e','0e0c6c5f','0e0c6c9b','0e0c6cc1','0e0c6cec','0e0c6d01','0e0c6d12','0e0c6d2e','0e0c6d50','0e0c6d6d') """
+	#	formdf = pd.DataFrame(psql.read_sql(nextform_sql, pyocnxn))
+	#	p1id = formdf.loc[0,'Page1_Id']
+	#	cursor = pyocnxn.cursor()
+	#	updatefiling_sql = """ UPDATE [ManualDataEntry].[990].[Filing] set ExtractionCodeId=1 where Page1_Id = ? """
+	#	cursor.execute(updatefiling_sql,p1id)
+	#	pyocnxn.commit()
+	#	pyocnxn.close()
 		
-		Page1_Id = formdf.loc[0,'Page1_Id']
-		FileType = formdf.loc[0,'FileType']
-		#print('Page1_Id (getnext): '+Page1_Id)
-		#print(formdf)
-		print("Getnext Page1_Id: "+Page1_Id)
-		print("Getnext FileType: "+FileType)
-		if FileType=='EO': app.show_frame(EOEntry)
-		else: app.show_frame(PFEntry)
+	#	Page1_Id = formdf.loc[0,'Page1_Id']
+	#	FileType = formdf.loc[0,'FileType']
+	#	#print('Page1_Id (getnext): '+Page1_Id)
+	#	#print(formdf)
+	#	print("Getnext Page1_Id: "+Page1_Id)
+	#	print("Getnext FileType: "+FileType)
+	#	if FileType=='EO': app.show_frame(EOEntry)
+	#	else: app.show_frame(PFEntry)
 	
 	def submit(*self):
 		print("Submitting data to SQL tables")
@@ -163,12 +165,23 @@ class EOEntry(tk.Frame):
 		
 		self.data = Dataverse()
 		
+		
+		#label = tk.Label(self, text="EO Entry", font=LARGE_FONT)
+		#label.pack(pady=10, padx=10)
+		#buttonhome = ttk.Button(self, text="Back to Home", 
+		#	command=lambda: controller.show_frame(StartPage))
+		#buttonhome.pack()
+		#buttonprint2 = ttk.Button(self, text="Print 'Miller'", command=lambda: self.ttext2(self.thistext))
+		#buttonprint2.pack()
+		#buttonPF = ttk.Button(self, text="PF Entry", 
+		#	command=lambda: controller.show_frame(PFEntry))
+		#buttonPF.pack()
 		#for x in range(21):
 		#	self.grid_columnconfigure(x, minsize=5)
 		for x in range(21):
-			colspacer = tk.Label(self, text = " "); colspacer.grid(row=0, column=x)
+			colspacer = tk.Label(self, text = "."); colspacer.grid(row=0, column=x)
 		for y in range(41):
-			rowspacer = tk.Label(self, text = " "); rowspacer.grid(row=y, column=0)
+			rowspacer = tk.Label(self, text = "."); rowspacer.grid(row=y, column=0)
 		
 		EINlabel = tk.Label(self, text="EIN"); EINlabel.grid(row=2,column=1,sticky="NW")
 		Companylabel = tk.Label(self, text="Company"); Companylabel.grid(row=3,column=1,sticky="NW")
@@ -194,31 +207,84 @@ class EOEntry(tk.Frame):
 		
 		
 		#Dynamic/Updating Labels
-		self.EIN = tk.Label(self, text=self.data.EIN)
+		self.EIN = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
+		self.EIN.insert(0,self.data.EIN)
 		self.EIN.grid(row=2,column=2,sticky="NW")
-		self.Company = tk.Label(self, text=self.data.Company, font="helvetica 8 bold")
-		self.Company.grid(row=3,column=2,sticky="NW")
-		self.FormYear = tk.Label(self, text=self.data.FormYear)
+		#self.Company = tk.Label(self, text=self.data.Company, font="helvetica 8 bold")
+		self.Company = tk.Entry(self, width = 100, borderwidth=0)#,background="#f0f0f0")
+		self.Company.insert(0,self.data.Company)
+		self.Company.grid(row=3,column=2,columnspan=13,sticky="NW")
+		self.FormYear = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
+		self.FormYear.insert(0,self.data.FormYear)
 		self.FormYear.grid(row=4,column=2,sticky="NW")
-		self.FileLocation = tk.Label(self, text=self.data.FileLocation)
-		self.FileLocation.grid(row=5,column=2,sticky="NW")
-		self.Page1_Id = tk.Label(self, text=self.data.Page1_Id)
+		self.FileLocation = tk.Entry(self, width = 100, borderwidth=0,background="#f0f0f0")
+		self.FileLocation.insert(0,self.data.FileLocation)
+		self.FileLocation.grid(row=5,column=2,columnspan=13,sticky="NW")
+		self.Page1_Id = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
+		self.Page1_Id.insert(0,self.data.Page1_Id)
 		self.Page1_Id.grid(row=6,column=2,sticky="NW")
 		self.FileType = tk.Label(self, text=self.data.FileType)
 		self.FileType.grid(row=7,column=2,sticky="NW")
+		self.entries = [self.EIN,self.Company, self.FormYear, self.FileLocation, self.Page1_Id]
+		for entry in self.entries:
+			entry.config(state="readonly")
+		
+		#User Input Entries
+		wmaster = 1150
+		hmaster = 100
+		self.entryframe = Frame(self,width=wmaster,height=hmaster)
+		self.entryframe.grid(row=15,column=1,columnspan=19,rowspan=11)
+		
+		
+		canvas = Canvas(self.entryframe,bg='#FFFFFF',width=wmaster,height=hmaster,scrollregion=(0,0,600,hmaster*2))
+		vbar = Scrollbar(self.entryframe,orient=VERTICAL)
+		vbar.pack(side=RIGHT,fill=Y)
+		vbar.config(command=canvas.yview)
+		canvas.config(yscrollcommand=vbar.set)
+		canvas.pack(side=LEFT,expand=TRUE,fill=BOTH,anchor='nw')
+		f2 = Frame(canvas,width=wmaster,height=500)
+		canvas.create_window((0,0),window=f2,anchor='nw')
+		#f2.pack(fill=BOTH)
+		l1 = tk.Label(f2, text="Name")
+		l1.grid(row=0,column=0,sticky="NW")
+		l2 = tk.Label(f2, text="Name2")
+		l2.grid(row=1,column=1,sticky="NW")
+		l3 = tk.Label(f2, text="Name3")
+		l3.grid(row=2,column=2,sticky="NW")
 		
 		
 		
-		#label = tk.Label(self, text="EO Entry", font=LARGE_FONT)
-		#label.pack(pady=10, padx=10)
-		#buttonhome = ttk.Button(self, text="Back to Home", 
-		#	command=lambda: controller.show_frame(StartPage))
-		#buttonhome.pack()
-		#buttonprint2 = ttk.Button(self, text="Print 'Miller'", command=lambda: self.ttext2(self.thistext))
-		#buttonprint2.pack()
-		#buttonPF = ttk.Button(self, text="PF Entry", 
-		#	command=lambda: controller.show_frame(PFEntry))
-		#buttonPF.pack()
+		
+		
+		#self.entrytextbox = Text(self.entryframe, height=29, width=90,bg="#FFFFFF")
+		#self.entrytextbox.pack(side=LEFT,fill=BOTH,expand=TRUE)
+		#self.entryscrollbar = Scrollbar(self.entryframe)
+		#self.entryscrollbar.pack(side=RIGHT,fill=BOTH,expand=TRUE)
+		#self.entrytextbox.insert('1.0','a;lskdfj;alksdjf ;aksldjf a\n\nlkasjdf\n02938lkfa;sdkjfalsdkfja;sdklfj\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.;sdklfj;askdfj;klja;sdkfj')
+		#self.entrytextbox.config(yscrollcommand=self.entryscrollbar.set)
+		#self.entryscrollbar.config(command=self.entrytextbox.yview)
+		
+		
+		
+		#self.entrycanvas = tk.Canvas(self.entryframe)
+		#self.entrycanvas.pack(side=LEFT)
+		#self.scrollbar = tk.Scrollbar(self.entryframe,command=self.entrycanvas.yview)
+		#self.scrollbar.pack(side=LEFT,fill='y')
+		#self.entrycanvas.configure(yscrollcommand = self.scrollbar.set)
+		
+		#self.entrycanvas.configure(scrollregion=self.entrycanvas.bbox('all'))
+		
+		#self.eframe = tk.Frame(self.entrycanvas)
+		#self.entrycanvas.create_window((0,0),window=self.eframe, anchor='nw')
+		#l = tk.Label(self.eframe, text="Hello", font="-size 50")
+		#l.pack()
+		#l = tk.Label(self.eframe, text="World", font="-size 50")
+		#l.pack()
+		#l = tk.Label(self.eframe, text="Test text 1\nTest text 2\nTest text 3\nTest text 4\nTest text 5\nTest text 6\nTest text 7\nTest text 8\nTest text 9", font="-size 20")
+		#l.pack()
+		
+		
+		
 		buttonNext = ttk.Button(self, text="Next Form", 
 			command=self.UpdateCompanyInfo)
 		buttonNext.grid(row=4,column=18)
@@ -227,14 +293,23 @@ class EOEntry(tk.Frame):
 		
 		
 	def UpdateCompanyInfo(self, *event):
+		for entry in self.entries:
+			entry.config(state=NORMAL)
 		print("Updating Company Info")
 		self.data.getnext()
-		self.Company.config(text=self.data.Company)
-		self.EIN.config(text=self.data.EIN)
-		self.FormYear.config(text=self.data.FormYear)
-		self.FileLocation.config(text=self.data.FileLocation)
-		self.Page1_Id.config(text=self.data.Page1_Id)
+		self.EIN.delete(0,END)
+		self.EIN.insert(0,self.data.EIN)
+		self.Company.delete(0,END)
+		self.Company.insert(0,self.data.Company)
+		self.FormYear.delete(0,END)
+		self.FormYear.insert(0,self.data.FormYear)
+		self.FileLocation.delete(0,END)
+		self.FileLocation.insert(0,self.data.FileLocation)
+		self.Page1_Id.delete(0,END)
+		self.Page1_Id.insert(0,self.data.Page1_Id)
 		self.FileType.config(text=self.data.FileType)
+		for entry in self.entries:
+			entry.config(state="readonly")
 
 class PFEntry(tk.Frame):
 	def __init__(self, parent, controller):
