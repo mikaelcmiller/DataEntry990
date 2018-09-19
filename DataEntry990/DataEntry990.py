@@ -7,6 +7,7 @@ import pandas as pd
 import pandas.io.sql as psql
 import pyodbc
 import os
+import numpy as np
 
 LARGE_FONT = ("Verdana", 12)
 
@@ -231,65 +232,74 @@ class EOEntry(tk.Frame):
 		
 		#User Input Entries
 		wmaster = 1150
-		hmaster = 100
+		hmaster = 500
 		self.entryframe = Frame(self,width=wmaster,height=hmaster)
-		self.entryframe.grid(row=15,column=1,columnspan=19,rowspan=11)
+		self.entryframe.grid(row=15,column=1,columnspan=19,rowspan=19)
 		
 		
-		canvas = Canvas(self.entryframe,bg='#FFFFFF',width=wmaster,height=hmaster,scrollregion=(0,0,600,hmaster*2))
-		vbar = Scrollbar(self.entryframe,orient=VERTICAL)
-		vbar.pack(side=RIGHT,fill=Y)
-		vbar.config(command=canvas.yview)
-		canvas.config(yscrollcommand=vbar.set)
-		canvas.pack(side=LEFT,expand=TRUE,fill=BOTH,anchor='nw')
-		f2 = Frame(canvas,width=wmaster,height=500)
-		canvas.create_window((0,0),window=f2,anchor='nw')
-		#f2.pack(fill=BOTH)
-		l1 = tk.Label(f2, text="Name")
-		l1.grid(row=0,column=0,sticky="NW")
-		l2 = tk.Label(f2, text="Name2")
-		l2.grid(row=1,column=1,sticky="NW")
-		l3 = tk.Label(f2, text="Name3")
-		l3.grid(row=2,column=2,sticky="NW")
+		self.canvas = Canvas(self.entryframe,bg='#FFFFFF',width=wmaster,height=hmaster)
+		self.vbar = Scrollbar(self.entryframe,orient=VERTICAL)
+		self.vbar.pack(side=RIGHT,fill=Y)
+		self.vbar.config(command=self.canvas.yview)
+		self.canvas.config(yscrollcommand=self.vbar.set)
+		self.canvas.pack(side=LEFT,expand=TRUE,fill=BOTH,anchor='nw')
+		self.f2 = Frame(self.canvas,width=wmaster,height=700)
+		self.canvas.create_window((0,0),window=self.f2,anchor='nw')
+		#for r in range(20):
+		#	for c in range(20):
+		#		e = Label(self.f2,text=str(r)+","+str(c))
+		#		e.grid(row=r,column=c)
 		
+		for x in range(7):
+			colspacer = tk.Label(self.f2, text = "."); colspacer.grid(row=0, column=x)
+		for y in range(15):
+			rowspacer = tk.Label(self.f2, text = "."); rowspacer.grid(row=y, column=0)
 		
+		self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+		Namelabel = tk.Label(self.f2, text="Name"); Namelabel.grid(row=0,column=0,sticky="NW")
+		Titlelabel = tk.Label(self.f2, text="Title"); Titlelabel.grid(row=0,column=1,sticky="NW")
+		Hourslabel = tk.Label(self.f2, text="Hours"); Hourslabel.grid(row=0,column=2,sticky="NW")
+		Reportablelabel = tk.Label(self.f2, text="Reportable (Column D)"); Reportablelabel.grid(row=0,column=3,sticky="NW")
+		Relatedlabel = tk.Label(self.f2, text="Related (Column E)"); Relatedlabel.grid(row=0,column=4,sticky="NW")
+		Otherlabel = tk.Label(self.f2, text="Other (Column F)"); Otherlabel.grid(row=0,column=5,sticky="NW")
 		
+		self.listofentries = []
+		for i in range(5): #rows
+			self.listofentries.append([])
+			for x in range(6): #columns
+				e = Entry(self.f2, width=15)
+				e.grid(row=i+1,column=x)
+				self.listofentries[-1].append(e)
 		
-		
-		#self.entrytextbox = Text(self.entryframe, height=29, width=90,bg="#FFFFFF")
-		#self.entrytextbox.pack(side=LEFT,fill=BOTH,expand=TRUE)
-		#self.entryscrollbar = Scrollbar(self.entryframe)
-		#self.entryscrollbar.pack(side=RIGHT,fill=BOTH,expand=TRUE)
-		#self.entrytextbox.insert('1.0','a;lskdfj;alksdjf ;aksldjf a\n\nlkasjdf\n02938lkfa;sdkjfalsdkfja;sdklfj\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.\nasdf.;sdklfj;askdfj;klja;sdkfj')
-		#self.entrytextbox.config(yscrollcommand=self.entryscrollbar.set)
-		#self.entryscrollbar.config(command=self.entrytextbox.yview)
-		
-		
-		
-		#self.entrycanvas = tk.Canvas(self.entryframe)
-		#self.entrycanvas.pack(side=LEFT)
-		#self.scrollbar = tk.Scrollbar(self.entryframe,command=self.entrycanvas.yview)
-		#self.scrollbar.pack(side=LEFT,fill='y')
-		#self.entrycanvas.configure(yscrollcommand = self.scrollbar.set)
-		
-		#self.entrycanvas.configure(scrollregion=self.entrycanvas.bbox('all'))
-		
-		#self.eframe = tk.Frame(self.entrycanvas)
-		#self.entrycanvas.create_window((0,0),window=self.eframe, anchor='nw')
-		#l = tk.Label(self.eframe, text="Hello", font="-size 50")
-		#l.pack()
-		#l = tk.Label(self.eframe, text="World", font="-size 50")
-		#l.pack()
-		#l = tk.Label(self.eframe, text="Test text 1\nTest text 2\nTest text 3\nTest text 4\nTest text 5\nTest text 6\nTest text 7\nTest text 8\nTest text 9", font="-size 20")
-		#l.pack()
-		
-		
+		getbtn = Button(self.f2, text="Get entries", command=self.getentries)
+		getbtn.grid(row=7,column=7)
 		
 		buttonNext = ttk.Button(self, text="Next Form", 
 			command=self.UpdateCompanyInfo)
 		buttonNext.grid(row=4,column=18)
 		buttonSubmit = ttk.Button(self, text="Submit", command=lambda: controller.submit())
 		buttonSubmit.grid(row=38, column=18)
+		
+	def getentries(self,*event):
+		todf = []
+		for i in range(5):
+			todf.append([])
+			for j in range(6):
+				todf[i].append(self.listofentries[i][j].get())
+		#print(todf)
+		
+		df = pd.DataFrame(todf)
+		print("OGDF")
+		print(df)
+		df[0].replace('',np.nan,inplace=True)
+		df[1].replace('',np.nan,inplace=True)
+		df[2].replace('',np.nan,inplace=True)
+		df[3].replace('',np.nan,inplace=True)
+		print("NaN DF")
+		print(df)
+		df.dropna(subset=[0,1,2],inplace=True)
+		print("Dropped DF")
+		print(df)
 		
 		
 	def UpdateCompanyInfo(self, *event):
