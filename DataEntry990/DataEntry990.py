@@ -11,41 +11,6 @@ import numpy as np
 
 LARGE_FONT = ("Verdana", 12)
 
-
-#class NextForm:
-#	def __init__(self):
-#		self.Page1_Id = '0123456e'
-#		self.Ein = '01234567e'
-#		self.Name = 'First'
-#		self.FileDate = '2015-12-01'
-#		self.FileType = 'PF'
-#		self.ExtractionCodeId = 0
-#		self.ExtractionCode = 'Ready'
-#		self.City = 'Irvine'
-#		self.State = 'CA'
-#		self.FileLocation = 'This_Location'
-#		cols = ['Page1_Id','Ein','Name','FileDate','FileType','ExtractionCodeId','ExtractionCode','City','State','FileLocation']
-#		self.formdf = pd.DataFrame(columns=cols)
-	
-#	def getnext(self):
-#		print("GetNext active")
-#		pyocnxn = pyodbc.connect("DRIVER={SQL Server};SERVER=SNADSSQ3;DATABASE=assessorwork;trusted_connection=yes;")
-#		nextform_sql = """ SELECT TOP 1 * from [ManualDataEntry].[990].[Next990ForEntry] """
-#		self.formdf = pd.DataFrame(psql.read_sql(nextform_sql, pyocnxn))
-#		p1id = self.formdf.loc[0,'Page1_Id']
-#		#print(p1id)
-#		cursor = pyocnxn.cursor()
-#		updatefiling_sql = """ UPDATE [ManualDataEntry].[990].[Filing] set ExtractionCodeId=1 where Page1_Id = ? """
-#		cursor.execute(updatefiling_sql,p1id)
-#		pyocnxn.commit()
-#		pyocnxn.close()
-#		self.Page1_Id = self.formdf.loc[0,'Page1_Id']
-#		self.Ein = self.formdf.loc[0,'Ein']
-#		self.Name = self.formdf.loc[0,'Name']
-#		#print(self.formdf)
-	
-#	#print(formdf)
-
 class Dataverse:
 	def __init__(self):
 		self.EIN = '444444444'
@@ -166,19 +131,6 @@ class EOEntry(tk.Frame):
 		
 		self.data = Dataverse()
 		
-		
-		#label = tk.Label(self, text="EO Entry", font=LARGE_FONT)
-		#label.pack(pady=10, padx=10)
-		#buttonhome = ttk.Button(self, text="Back to Home", 
-		#	command=lambda: controller.show_frame(StartPage))
-		#buttonhome.pack()
-		#buttonprint2 = ttk.Button(self, text="Print 'Miller'", command=lambda: self.ttext2(self.thistext))
-		#buttonprint2.pack()
-		#buttonPF = ttk.Button(self, text="PF Entry", 
-		#	command=lambda: controller.show_frame(PFEntry))
-		#buttonPF.pack()
-		#for x in range(21):
-		#	self.grid_columnconfigure(x, minsize=5)
 		for x in range(21):
 			colspacer = tk.Label(self, text = "."); colspacer.grid(row=0, column=x)
 		for y in range(41):
@@ -193,44 +145,69 @@ class EOEntry(tk.Frame):
 		TotalRevenuelabel = tk.Label(self, text="(P1L12C2) Total Revenue"); TotalRevenuelabel.grid(row=9,column=1,sticky="NW")
 		TotalAssetsBoYlabel = tk.Label(self, text="(P1L20C1) Total Assets BoY"); TotalAssetsBoYlabel.grid(row=10,column=1,sticky="NW")
 		TotalLiabilitiesBoYlabel = tk.Label(self, text="(P1L21C1) Total Liabilities BoY"); TotalLiabilitiesBoYlabel.grid(row=11,column=1,sticky="NW")
-		TotalContributionslabel = tk.Label(self, text="(P1L8C2) Total Contributions"); TotalContributionslabel.grid(row=8,column=5,sticky="NW")
-		TotalExpenseslabel = tk.Label(self, text="(P1L18C2) Total Expenses"); TotalExpenseslabel.grid(row=9,column=5,sticky="NW")
-		TotalAssetsEoYlabel = tk.Label(self, text="(P1L20C2) Total Assets EoY"); TotalAssetsEoYlabel.grid(row=10,column=5,sticky="NW")
-		TotalLiabilitiesEoYlabel = tk.Label(self, text="(P1L21C2) Total Liabilities EoY"); TotalLiabilitiesEoYlabel.grid(row=11,column=5,sticky="NW")
-		Namelabel = tk.Label(self, text="Name"); Namelabel.grid(row=14,column=1,sticky="NW")
-		Titlelabel = tk.Label(self, text="Title"); Titlelabel.grid(row=14,column=5,sticky="NW")
-		Hourslabel = tk.Label(self, text="Hours"); Hourslabel.grid(row=14,column=11,sticky="NW")
-		Reportablelabel = tk.Label(self, text="Reportable (Column D)"); Reportablelabel.grid(row=14,column=13,sticky="NW")
-		Relatedlabel = tk.Label(self, text="Related (Column E)"); Relatedlabel.grid(row=14,column=16,sticky="NW")
-		Otherlabel = tk.Label(self, text="Other (Column F)"); Otherlabel.grid(row=14,column=18,sticky="NW")
-		ProblemCodeLabel = tk.Label(self, text="Problem Code (only if submitting no data)"); ProblemCodeLabel.grid(row=37,column=1,sticky="NW")
+		TotalContributionslabel = tk.Label(self, text="(P1L8C2) Total Contributions"); TotalContributionslabel.grid(row=8,column=4,sticky="NW")
+		TotalExpenseslabel = tk.Label(self, text="(P1L18C2) Total Expenses"); TotalExpenseslabel.grid(row=9,column=4,sticky="NW")
+		TotalAssetsEoYlabel = tk.Label(self, text="(P1L20C2) Total Assets EoY"); TotalAssetsEoYlabel.grid(row=10,column=4,sticky="NW")
+		TotalLiabilitiesEoYlabel = tk.Label(self, text="(P1L21C2) Total Liabilities EoY"); TotalLiabilitiesEoYlabel.grid(row=11,column=4,sticky="NW")
+		#Namelabel = tk.Label(self, text="Name"); Namelabel.grid(row=14,column=1,sticky="NW")
+		#Titlelabel = tk.Label(self, text="Title"); Titlelabel.grid(row=14,column=5,sticky="NW")
+		#Hourslabel = tk.Label(self, text="Hours"); Hourslabel.grid(row=14,column=11,sticky="NW")
+		#Reportablelabel = tk.Label(self, text="Reportable (Column D)"); Reportablelabel.grid(row=14,column=13,sticky="NW")
+		#Relatedlabel = tk.Label(self, text="Related (Column E)"); Relatedlabel.grid(row=14,column=16,sticky="NW")
+		#Otherlabel = tk.Label(self, text="Other (Column F)"); Otherlabel.grid(row=14,column=18,sticky="NW")
+		ProblemCodeLabel = tk.Label(self, text="Problem Code (only if submitting no data)",fg="red"); ProblemCodeLabel.grid(row=37,column=1,sticky="NW",columnspan=3)
 		UserLabel = tk.Label(self, text="User: "); UserLabel.grid(row=2,column=18,sticky="NW")
 		
 		
 		#Dynamic/Updating Labels
 		self.EIN = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
 		self.EIN.insert(0,self.data.EIN)
-		self.EIN.grid(row=2,column=2,sticky="NW")
-		#self.Company = tk.Label(self, text=self.data.Company, font="helvetica 8 bold")
+		self.EIN.grid(row=2,column=2,columnspan=13,sticky="NW")
 		self.Company = tk.Entry(self, width = 100, borderwidth=0)#,background="#f0f0f0")
 		self.Company.insert(0,self.data.Company)
 		self.Company.grid(row=3,column=2,columnspan=13,sticky="NW")
 		self.FormYear = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
 		self.FormYear.insert(0,self.data.FormYear)
-		self.FormYear.grid(row=4,column=2,sticky="NW")
+		self.FormYear.grid(row=4,column=2,columnspan=13,sticky="NW")
 		self.FileLocation = tk.Entry(self, width = 100, borderwidth=0,background="#f0f0f0")
 		self.FileLocation.insert(0,self.data.FileLocation)
 		self.FileLocation.grid(row=5,column=2,columnspan=13,sticky="NW")
 		self.Page1_Id = tk.Entry(self, width = 50, borderwidth=0,background="#f0f0f0")
 		self.Page1_Id.insert(0,self.data.Page1_Id)
-		self.Page1_Id.grid(row=6,column=2,sticky="NW")
-		self.FileType = tk.Label(self, text=self.data.FileType)
-		self.FileType.grid(row=7,column=2,sticky="NW")
+		self.Page1_Id.grid(row=6,column=2,columnspan=13,sticky="NW")
+		#self.FileType = tk.Label(self, text=self.data.FileType)
+		#self.FileType.grid(row=7,column=2,sticky="NW")
 		self.entries = [self.EIN,self.Company, self.FormYear, self.FileLocation, self.Page1_Id]
 		for entry in self.entries:
 			entry.config(state="readonly")
 		
-		#User Input Entries
+		## Problem code dropdown
+		self.tkvar = StringVar(self)
+		
+		choices = ['                                        ','3  - No compensation','4  - Aggregate compensation only','5  - Not in English','6  - Compensation already in database','7  - Zero compensation in all categories','8  - Error with the pdf creation app','9  - Too old to look at','10 - Pdf was skipped in the entry tool','11 - Organization is not in a US state']
+		self.tkvar.set('                                        ') # set the default option
+		
+		self.popupMenu = OptionMenu(self, self.tkvar, *choices)
+		self.popupMenu.grid(row = 38, column =1)
+		
+		# on change dropdown value
+		#def change_dropdown(*args):
+		#	print( tkvar.get() )
+		
+		# link function to change dropdown
+		#tkvar.trace('w', change_dropdown)
+		
+		## Company Financials Inputs
+		self.clist = []
+		for i in range(4):
+			self.clist.append([])
+			for x in range(2):
+				e = Entry(self,width=15)
+				if (x==0): e.grid(row=i+8,column=2)
+				if (x==1): e.grid(row=i+8,column=5)
+				self.clist[-1].append(e)
+		
+		## User Input Entries
 		wmaster = 1150
 		hmaster = 500
 		self.entryframe = Frame(self,width=wmaster,height=hmaster)
@@ -245,31 +222,42 @@ class EOEntry(tk.Frame):
 		self.canvas.pack(side=LEFT,expand=TRUE,fill=BOTH,anchor='nw')
 		self.f2 = Frame(self.canvas,width=wmaster,height=700)
 		self.canvas.create_window((0,0),window=self.f2,anchor='nw')
-		#for r in range(20):
-		#	for c in range(20):
-		#		e = Label(self.f2,text=str(r)+","+str(c))
-		#		e.grid(row=r,column=c)
 		
-		for x in range(7):
-			colspacer = tk.Label(self.f2, text = "."); colspacer.grid(row=0, column=x)
-		for y in range(15):
-			rowspacer = tk.Label(self.f2, text = "."); rowspacer.grid(row=y, column=0)
+		#for x in range(7):
+		#	colspacer = tk.Label(self.f2, text = "."); colspacer.grid(row=0, column=x)
+		#for y in range(15):
+		#	rowspacer = tk.Label(self.f2, text = "."); rowspacer.grid(row=y, column=0)
 		
 		self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-		Namelabel = tk.Label(self.f2, text="Name"); Namelabel.grid(row=0,column=0,sticky="NW")
-		Titlelabel = tk.Label(self.f2, text="Title"); Titlelabel.grid(row=0,column=1,sticky="NW")
-		Hourslabel = tk.Label(self.f2, text="Hours"); Hourslabel.grid(row=0,column=2,sticky="NW")
-		Reportablelabel = tk.Label(self.f2, text="Reportable (Column D)"); Reportablelabel.grid(row=0,column=3,sticky="NW")
-		Relatedlabel = tk.Label(self.f2, text="Related (Column E)"); Relatedlabel.grid(row=0,column=4,sticky="NW")
-		Otherlabel = tk.Label(self.f2, text="Other (Column F)"); Otherlabel.grid(row=0,column=5,sticky="NW")
+		
+		headerlabels = ['Name','Title','Hours','Reportable','Related','Other']
+		for h in range(6):
+			label = Label(self.f2, text=headerlabels[h])
+			label.grid(row=0,column=h,sticky="NW")
 		
 		self.listofentries = []
-		for i in range(5): #rows
+		self.listofchecks = []
+		self.rowrange = 15
+		listofchk = ['Individual Trustee','Institutional Trustee','Officer','Key','Former']
+		for i in range(self.rowrange): #rows
 			self.listofentries.append([])
+			self.listofchecks.append([])
+			## Entries
 			for x in range(6): #columns
-				e = Entry(self.f2, width=15)
-				e.grid(row=i+1,column=x)
+				if (x==0 or x==1): e = Entry(self.f2, width=20)
+				else: e = Entry(self.f2, width=10)
+				e.grid(row=(((i+1)*2)-1),column=x)
 				self.listofentries[-1].append(e)
+			## Checkboxes
+			self.chkframe = Frame(self.f2)
+			self.chkframe.grid(row=(i+1)*2,column=1,columnspan=5)
+			for x in range(5):
+				c = IntVar()
+				chk = Checkbutton(self.chkframe, text=listofchk[x],variable=c)
+				chk.grid(row=0,column=(x+1))
+				self.listofchecks[-1].append(c)
+		
+		
 		
 		getbtn = Button(self.f2, text="Get entries", command=self.getentries)
 		getbtn.grid(row=7,column=7)
@@ -281,25 +269,46 @@ class EOEntry(tk.Frame):
 		buttonSubmit.grid(row=38, column=18)
 		
 	def getentries(self,*event):
+		companytodf = []
+		for i in range(4):
+			companytodf.append([])
+			for j in range(2):
+				companytodf[i].append(self.clist[i][j].get())
+		print(companytodf)
+		
 		todf = []
-		for i in range(5):
+		for i in range(self.rowrange):
 			todf.append([])
 			for j in range(6):
 				todf[i].append(self.listofentries[i][j].get())
+			for j in range(5):
+				todf[i].append(self.listofchecks[i][j].get())
 		#print(todf)
 		
 		df = pd.DataFrame(todf)
-		print("OGDF")
+		df.replace('',np.nan,inplace=True)
+		for d in range(6,11):
+			df[d].replace(0,np.nan,inplace=True)
+		df.dropna(how='all',inplace=True)
+		print("Output Officer Data")
+		df.replace(np.nan,'',inplace=True)
 		print(df)
-		df[0].replace('',np.nan,inplace=True)
-		df[1].replace('',np.nan,inplace=True)
-		df[2].replace('',np.nan,inplace=True)
-		df[3].replace('',np.nan,inplace=True)
-		print("NaN DF")
-		print(df)
-		df.dropna(subset=[0,1,2],inplace=True)
-		print("Dropped DF")
-		print(df)
+		# Send DF to Officers
+		
+		self.clearentries()
+		
+	def clearentries(self,*event):
+		for i in range(4):
+			for j in range(2):
+				self.clist[i][j].delete(0,END)
+		
+		for i in range(self.rowrange):
+			for j in range(6):
+				self.listofentries[i][j].delete(0,END)
+			for j in range(5):
+				self.listofchecks[i][j].set(0)
+		
+		self.tkvar.set('                                        ')
 		
 		
 	def UpdateCompanyInfo(self, *event):
@@ -317,7 +326,7 @@ class EOEntry(tk.Frame):
 		self.FileLocation.insert(0,self.data.FileLocation)
 		self.Page1_Id.delete(0,END)
 		self.Page1_Id.insert(0,self.data.Page1_Id)
-		self.FileType.config(text=self.data.FileType)
+		#self.FileType.config(text=self.data.FileType)
 		for entry in self.entries:
 			entry.config(state="readonly")
 
